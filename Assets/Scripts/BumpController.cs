@@ -4,22 +4,31 @@ public class BumpController : MonoBehaviour
 {
 
     [SerializeField] private float moveSpeed = -1000f;
-
     private Rigidbody rb;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
 
-        // This value will increase as the game progresses
-        rb.maxLinearVelocity = 5f;
+        // This value will increase as the game progresses [5-100]
+        rb.maxLinearVelocity = GameManager.maxBumpSpeed;
     }
 
-    // Update is called once per frame
-    void Update()
+
+    void FixedUpdate()
     {
-        rb.AddForce(new Vector3(x: 0f, y: 0f, z: moveSpeed * Time.deltaTime));
+        rb.AddForce(new Vector3(0f, 0f, moveSpeed * Time.deltaTime));
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        //Debug.Log($"Bump collided with {collision.gameObject.name}");
+
+        if (collision.gameObject.CompareTag("Finish"))
+        {
+            GameManager.IncreaseMaxSpeed();
+            Destroy(gameObject);
+        }
     }
 
 }
