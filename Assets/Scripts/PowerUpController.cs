@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class BumpController : MonoBehaviour
+public class PowerUpController : MonoBehaviour
 {
     private Rigidbody rb;
-    private ObjectPool<GameObject> bumpPool;
+    private ObjectPool<GameObject> powerUpPool;
 
-    public ObjectPool<GameObject> BumpPool { set => bumpPool = value; }
+    public ObjectPool<GameObject> PowerUpPool { set => powerUpPool = value; }
 
     void Awake()
     {
@@ -22,7 +22,7 @@ public class BumpController : MonoBehaviour
             SetVelocity(0f, true);
 
             //Release back to Pool
-            bumpPool.Release(gameObject);
+            powerUpPool.Release(gameObject);
         }
     }
 

@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
+        _isPlaying = true;
+        _isPlayerGrounded = false;
         rb = GetComponent<Rigidbody>();
         if (playerActions != null)
         {
@@ -22,14 +24,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Please assign Jump Action Reference!");
+            Debug.LogError("Please assign Jump Action Reference!");
         }
-    }
-
-    void Start()
-    {
-        _isPlaying = true;
-        _isPlayerGrounded = false;
     }
 
     void OnEnable()
@@ -52,8 +48,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log($"Player collided with {collision.gameObject.name}");
-
         // Ground check
         if (collision.gameObject.CompareTag("Ground"))
         {
@@ -65,7 +59,6 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Bump"))
         {
             _isPlaying = false;
-            Debug.Log("Game Over condition reached!");
         }
     }
 
@@ -73,7 +66,6 @@ public class PlayerController : MonoBehaviour
     {
         if (_isPlaying && _isPlayerGrounded)
         {
-            //Debug.Log("Jumping..");
             rb.AddForce(new Vector3(0f, jumpForce, 0f), ForceMode.Impulse);
             _isPlayerGrounded = false;
         }
