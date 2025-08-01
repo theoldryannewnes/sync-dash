@@ -13,8 +13,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Animator canvasAnimator;
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject bumpPrefab;
-    [SerializeField] private Transform bumpSpawn;
     [SerializeField] private GameObject powerUpPrefab;
+    [SerializeField] private Transform bumpSpawn;
     [SerializeField] private Transform powerUpSpawn;
 
     private List<GameObject> bumpObjects = new List<GameObject>();
@@ -44,7 +44,12 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        GameObject pl = Instantiate(player, Vector3.up, Quaternion.identity);
+        Vector3 playerSpawn = new Vector3(50f, 1f, 0f);
+        Vector3 ghostSpawn = new Vector3(-50f, 1f, 0f);
+
+        GameObject pl = Instantiate(player, playerSpawn, Quaternion.identity);
+        GameObject gh = Instantiate(player, ghostSpawn, Quaternion.identity);
+
         playerController = pl.GetComponent<PlayerController>();
 
         // Start routines to spawn Bumps & PowerUps
@@ -150,7 +155,9 @@ public class GameManager : MonoBehaviour
         // Move the bump to spawn point
         if (power != null && powerUpSpawn != null)
         {
-            power.transform.position = powerUpSpawn.position;
+            float yOffset = Random.Range(-2f, 2f);
+            power.transform.position = new Vector3(powerUpSpawn.position.x, powerUpSpawn.position.y + yOffset, powerUpSpawn.position.z);
+            //power.transform.position = powerUpSpawn.position;
             power.transform.rotation = powerUpSpawn.rotation;
         }
 
@@ -163,7 +170,9 @@ public class GameManager : MonoBehaviour
         // Move the bump to spawn point
         if (power != null && powerUpSpawn != null)
         {
-            power.transform.position = powerUpSpawn.position;
+            float yOffset = Random.Range(-2f, 2f);
+            power.transform.position = new Vector3(powerUpSpawn.position.x, powerUpSpawn.position.y + yOffset, powerUpSpawn.position.z);
+
             power.transform.rotation = powerUpSpawn.rotation;
         }
 

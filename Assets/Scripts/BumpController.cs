@@ -3,6 +3,7 @@ using UnityEngine.Pool;
 
 public class BumpController : MonoBehaviour
 {
+
     private Rigidbody rb;
     private ObjectPool<GameObject> bumpPool;
 

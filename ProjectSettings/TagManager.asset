@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Bump
+  - PowerUp
   layers:
   - Default
   - TransparentFX

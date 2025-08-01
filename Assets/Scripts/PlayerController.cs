@@ -5,11 +5,11 @@ public class PlayerController : MonoBehaviour
 {
 
     private bool _isPlaying;
-    [SerializeField] private float jumpForce = 10f;
+    private bool _isPlayerGrounded;
     private Rigidbody rb;
+    [SerializeField] private float jumpForce = 10f;
     [SerializeField] private InputActionReference playerActions;
     private InputAction jumpAction;
-    private bool _isPlayerGrounded;
 
     public bool IsPlaying => _isPlaying;
 
@@ -59,6 +59,13 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Bump"))
         {
             _isPlaying = false;
+        }
+
+        // PowerUp Collected
+        if (collision.gameObject.CompareTag("PowerUp"))
+        {
+            Debug.Log("Power Up Collected");
+            Destroy(collision.gameObject);
         }
     }
 

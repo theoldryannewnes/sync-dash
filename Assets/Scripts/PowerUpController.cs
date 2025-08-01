@@ -3,6 +3,7 @@ using UnityEngine.Pool;
 
 public class PowerUpController : MonoBehaviour
 {
+
     private Rigidbody rb;
     private ObjectPool<GameObject> powerUpPool;
 
@@ -10,7 +11,7 @@ public class PowerUpController : MonoBehaviour
 
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponentInChildren<Rigidbody>();
     }
 
     void Update()
