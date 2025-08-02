@@ -4,14 +4,21 @@ using UnityEngine.Pool;
 public class PowerUpController : MonoBehaviour
 {
 
+    [SerializeField] private ParticleSystem ps;
     private Rigidbody rb;
+    private Collider sphereCollider;
+    private MeshRenderer meshRenderer;
+    private GameManager gameManager;
     private ObjectPool<GameObject> powerUpPool;
 
     public ObjectPool<GameObject> PowerUpPool { set => powerUpPool = value; }
+    public GameManager GameManager { set => gameManager = value; }
 
     void Awake()
     {
-        rb = GetComponentInChildren<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
+        sphereCollider = GetComponent<Collider>();
+        meshRenderer = GetComponent<MeshRenderer>();
     }
 
     void Update()
@@ -25,6 +32,12 @@ public class PowerUpController : MonoBehaviour
             //Release back to Pool
             powerUpPool.Release(gameObject);
         }
+    }
+
+    private void OnEnable()
+    {
+        sphereCollider.enabled = true;
+        meshRenderer.enabled = true;
     }
 
     public void SetVelocity(float speed, bool stop = false)
@@ -41,6 +54,21 @@ public class PowerUpController : MonoBehaviour
             rb.linearVelocity = new Vector3(0f, 0f, speed);
             rb.angularVelocity = Vector3.zero;
         }
+    }
+
+    public void BreakOrb()
+    {
+        //Add Points
+        gameManager.AddOrbPoint();
+
+        //Disable collider
+        sphereCollider.enabled = false;
+
+        //disable mesh
+        meshRenderer.enabled = false;
+
+        //Play PS
+        ps.Play();
     }
 
 }

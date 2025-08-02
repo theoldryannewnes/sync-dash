@@ -4,11 +4,11 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
 
+    [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private InputActionReference playerActions;
     private bool _isPlaying;
     private bool _isPlayerGrounded;
     private Rigidbody rb;
-    [SerializeField] private float jumpForce = 10f;
-    [SerializeField] private InputActionReference playerActions;
     private InputAction jumpAction;
 
     public bool IsPlaying => _isPlaying;
@@ -64,8 +64,7 @@ public class PlayerController : MonoBehaviour
         // PowerUp Collected
         if (collision.gameObject.CompareTag("PowerUp"))
         {
-            Debug.Log("Power Up Collected");
-            Destroy(collision.gameObject);
+            collision.gameObject.GetComponent<PowerUpController>()?.BreakOrb();
         }
     }
 
