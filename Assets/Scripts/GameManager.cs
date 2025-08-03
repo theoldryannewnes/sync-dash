@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
     {
         GameObject playerObject;
 
-        // If playerSpawn is set in inspector spawn there else spawn at ghostSpawn 
+        // If playerSpawn is set spawn player prefab else spawn ghost prefab
         if (playerSpawn != null)
         {
             Vector3 spawnPoint = new Vector3(playerSpawn.position.x, playerSpawn.position.y, playerSpawn.position.z);
@@ -50,7 +50,8 @@ public class GameManager : MonoBehaviour
 
             playerObject.GetComponent<PlayerController>().Manager = this;
             playerObject.GetComponent<PlayerController>().Canvas = canvasController;
-        } else
+        }
+        else
         {
             Vector3 spawnPoint = new Vector3(ghostSpawn.position.x, ghostSpawn.position.y, ghostSpawn.position.z);
             playerObject = Instantiate(ghost, spawnPoint, Quaternion.identity);

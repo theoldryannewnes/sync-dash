@@ -5,6 +5,8 @@ public class GhostController : MonoBehaviour
 {
 
     [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private float simulatedLag = 0.1f;
+
     private bool _isPlaying;
     private bool _isPlayerGrounded;
     private Rigidbody rb;
@@ -33,11 +35,16 @@ public class GhostController : MonoBehaviour
     {
         if (NetworkManager.playerActionQueue.Count > 0)
         {
-            PlayerActions action = NetworkManager.playerActionQueue.Dequeue();
+            PlayerActions nextAction = NetworkManager.playerActionQueue.Peek();
 
-            if (action.Type == PlayerActions.PlayerAction.Jump)
+            if (Time.time >= nextAction.Timestamp + simulatedLag)
             {
-                DoJump();
+                PlayerActions currentAction = NetworkManager.playerActionQueue.Dequeue();
+
+                if (currentAction.Type == PlayerActions.PlayerAction.Jump)
+                {
+                    DoJump();
+                }
             }
         }
     }

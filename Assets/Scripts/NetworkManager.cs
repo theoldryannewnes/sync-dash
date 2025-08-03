@@ -31,7 +31,7 @@ public class NetworkManager : MonoBehaviour
 
     private IEnumerator SpawnPowerUpRoutine()
     {
-        while(p1_Manager.IsPlaying && p2_Manager.IsPlaying)
+        while (p1_Manager.IsPlaying || p2_Manager.IsPlaying)
         {
             // Wait
             yield return new WaitForSeconds(10f);
@@ -69,7 +69,7 @@ public class NetworkManager : MonoBehaviour
 
     private IEnumerator SpawnObstaclesRoutine()
     {
-        while (p1_Manager.IsPlaying && p2_Manager.IsPlaying)
+        while (p1_Manager.IsPlaying || p2_Manager.IsPlaying)
         {
             if (p1_Manager.IsPlaying)
             {
