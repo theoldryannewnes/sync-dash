@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using static UnityEngine.InputSystem.DefaultInputActions;
 
 public class GhostController : MonoBehaviour
 {
@@ -80,7 +79,7 @@ public class GhostController : MonoBehaviour
             yield return new WaitForSeconds(1f);
 
             // Calculate distance
-            distanceTravelled += gameManager.currentMoveSpeed;
+            distanceTravelled += NetworkManager.MoveSpeed;
 
             // Set UI value
             canvasController.P2SetScore(distanceTravelled);

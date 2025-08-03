@@ -1,13 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
 public class GameManager : MonoBehaviour
 {
-
-    private const float maxSpawnTime = 8f;
-    private const float minSpawnTime = 3f;
 
     [SerializeField] private CanvasController canvasController;
     [SerializeField] private GameObject player;
@@ -16,13 +12,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject powerUpPrefab;
     [SerializeField] private Transform playerSpawn;
     [SerializeField] private Transform ghostSpawn;
-    [SerializeField] private Transform bumpSpawn;
-    [SerializeField] private Transform powerUpSpawn;
+    [SerializeField] private Transform objectSpawner;
 
     private List<GameObject> bumpObjects = new List<GameObject>();
     private List<GameObject> powerUpObjects = new List<GameObject>();
 
-    private float nextBumpSpawnTime;
     private bool isShowingEndPanel;
 
     private IObjectPool<GameObject> bumpPool;
@@ -35,83 +29,34 @@ public class GameManager : MonoBehaviour
     private int powerUpPoolCapacity = 1;
     private int powerUpPoolMaxSize = 1;
 
-    public float currentMoveSpeed;
+    public bool IsPlaying { get { return !isShowingEndPanel; } }
 
     void Awake()
     {
         isShowingEndPanel = false;
-        currentMoveSpeed = -10f;
         bumpPool = new ObjectPool<GameObject>(CreateBump, OnGetFromBumpPool, OnReleaseToBumpPool, OnDestroyPooledBump, bumpCollectionCheck, bumpPoolCapacity, bumpPoolMaxSize);
         powerUpPool = new ObjectPool<GameObject>(CreatePowerUp, OnGetFromPowerUpPool, OnReleaseToPowerUpPool, OnDestroyPooledPowerUp, powerUpCollectionCheck, powerUpPoolCapacity, powerUpPoolMaxSize);
     }
 
     void Start()
     {
-        GameObject pl = new GameObject();
+        GameObject playerObject;
 
         // If playerSpawn is set in inspector spawn there else spawn at ghostSpawn 
         if (playerSpawn != null)
         {
             Vector3 spawnPoint = new Vector3(playerSpawn.position.x, playerSpawn.position.y, playerSpawn.position.z);
-            pl = Instantiate(player, spawnPoint, Quaternion.identity);
+            playerObject = Instantiate(player, spawnPoint, Quaternion.identity);
 
-            pl.GetComponent<PlayerController>().Manager = this;
-            pl.GetComponent<PlayerController>().Canvas = canvasController;
+            playerObject.GetComponent<PlayerController>().Manager = this;
+            playerObject.GetComponent<PlayerController>().Canvas = canvasController;
         } else
         {
             Vector3 spawnPoint = new Vector3(ghostSpawn.position.x, ghostSpawn.position.y, ghostSpawn.position.z);
-            pl = Instantiate(ghost, spawnPoint, Quaternion.identity);
+            playerObject = Instantiate(ghost, spawnPoint, Quaternion.identity);
 
-            pl.GetComponent<GhostController>().Manager = this;
-            pl.GetComponent<GhostController>().Canvas = canvasController;
-        }
-
-        // Start routines to spawn Bumps & PowerUps
-        StartCoroutine(SpawnBumpRoutine());
-        StartCoroutine(SpawnPowerUpRoutine());
-    }
-
-    void Update()
-    {
-
-    }
-
-    private IEnumerator SpawnBumpRoutine()
-    {
-        while (!isShowingEndPanel)
-        {
-            // Spawn bump
-            GameObject bump = bumpPool.Get();
-
-            //Set Bump Velocity
-            bump.GetComponent<BumpController>().SetVelocity(currentMoveSpeed);
-
-            //Add bump to List
-            bumpObjects.Add(bump);
-
-            // Set next timer
-            nextBumpSpawnTime = Random.Range(minSpawnTime, maxSpawnTime);
-
-            // Waiit for next spwan
-            yield return new WaitForSeconds(nextBumpSpawnTime);
-        }
-    }
-
-    private IEnumerator SpawnPowerUpRoutine()
-    {
-        while (!isShowingEndPanel)
-        {
-            // Spawn bump
-            GameObject power = powerUpPool.Get();
-
-            //Set Bump Velocity
-            power.GetComponent<PowerUpController>().SetVelocity(currentMoveSpeed);
-
-            //Add bump to List
-            powerUpObjects.Add(power);
-
-            // Waiit for next spwan
-            yield return new WaitForSeconds(10f);
+            playerObject.GetComponent<GhostController>().Manager = this;
+            playerObject.GetComponent<GhostController>().Canvas = canvasController;
         }
     }
 
@@ -120,13 +65,6 @@ public class GameManager : MonoBehaviour
         GameObject bump = Instantiate(bumpPrefab);
         BumpController bumpController = bump.GetComponent<BumpController>();
 
-        // Move the bump to spawn point
-        if (bump != null && bumpSpawn != null)
-        {
-            bump.transform.position = bumpSpawn.position;
-            bump.transform.rotation = bumpSpawn.rotation;
-        }
-
         bumpController.BumpPool = (ObjectPool<GameObject>)bumpPool;
         return bump;
     }
@@ -134,10 +72,10 @@ public class GameManager : MonoBehaviour
     private void OnGetFromBumpPool(GameObject bump)
     {
         // Move the bump to spawn point
-        if (bump != null && bumpSpawn != null)
+        if (bump != null && objectSpawner != null)
         {
-            bump.transform.position = bumpSpawn.position;
-            bump.transform.rotation = bumpSpawn.rotation;
+            bump.transform.position = objectSpawner.position;
+            bump.transform.rotation = objectSpawner.rotation;
         }
 
         bump.SetActive(true);
@@ -158,14 +96,6 @@ public class GameManager : MonoBehaviour
         GameObject power = Instantiate(powerUpPrefab);
         PowerUpController powerController = power.GetComponent<PowerUpController>();
 
-        // Move the bump to spawn point
-        if (power != null && powerUpSpawn != null)
-        {
-            float yOffset = Random.Range(-2f, 2f);
-            power.transform.position = new Vector3(powerUpSpawn.position.x, powerUpSpawn.position.y + yOffset, powerUpSpawn.position.z);
-            power.transform.rotation = powerUpSpawn.rotation;
-        }
-
         powerController.PowerUpPool = (ObjectPool<GameObject>)powerUpPool;
         return power;
     }
@@ -173,12 +103,10 @@ public class GameManager : MonoBehaviour
     private void OnGetFromPowerUpPool(GameObject power)
     {
         // Move the bump to spawn point
-        if (power != null && powerUpSpawn != null)
+        if (power != null && objectSpawner != null)
         {
-            float yOffset = Random.Range(-2f, 2f);
-            power.transform.position = new Vector3(powerUpSpawn.position.x, powerUpSpawn.position.y + yOffset, powerUpSpawn.position.z);
-
-            power.transform.rotation = powerUpSpawn.rotation;
+            power.transform.position = objectSpawner.position;
+            power.transform.rotation = objectSpawner.rotation;
         }
 
         power.SetActive(true);
@@ -207,6 +135,35 @@ public class GameManager : MonoBehaviour
         {
             Destroy(power);
         }
+    }
+
+    public void SpawnBump(float speed)
+    {
+        // Spawn
+        GameObject bump = bumpPool.Get();
+
+        //Set Velocity
+        bump.GetComponent<BumpController>().SetVelocity(speed);
+
+        //Add to List
+        bumpObjects.Add(bump);
+    }
+
+    public void SpawnPowerUp(float speed, float y)
+    {
+        // Spawn bump
+        GameObject power = powerUpPool.Get();
+
+        PowerUpController powerController = power.GetComponent<PowerUpController>();
+
+        //Set Velocity
+        powerController.SetVelocity(speed);
+
+        //Set Y Offset
+        powerController.SetYOffset(y);
+
+        //Add to List
+        powerUpObjects.Add(power);
     }
 
     public void GameFinished()

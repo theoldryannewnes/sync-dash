@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(1f);
 
             // Calculate distance
-            distanceTravelled += gameManager.currentMoveSpeed;
+            distanceTravelled += NetworkManager.MoveSpeed;
 
             // Set UI value
             canvasController.P1SetScore(distanceTravelled);

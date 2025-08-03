@@ -38,6 +38,11 @@ public class PowerUpController : MonoBehaviour
         meshRenderer.enabled = true;
     }
 
+    public void SetYOffset(float y)
+    {
+        gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + y, gameObject.transform.position.z);
+    }
+
     public void SetVelocity(float speed, bool stop = false)
     {
         if (stop)
