@@ -16,7 +16,7 @@ public class BumpController : MonoBehaviour
 
     void Update()
     {
-        // Release bump if it goes past the destroy point
+        // Release if it goes past the destroy point
         if (gameObject.transform.position.z < -10)
         {
             //Stop movement

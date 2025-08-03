@@ -4,24 +4,50 @@ using UnityEngine;
 public class CanvasController : MonoBehaviour
 {
 
+    [SerializeField] private TMP_Text p1_Score;
+    [SerializeField] private TMP_Text p1_Orbs;
+    [SerializeField] private TMP_Text p2_Score;
+    [SerializeField] private TMP_Text p2_Orbs;
+
     public Animator canvasAnimator;
-    public TMP_Text scoreText;
-    public TMP_Text collectibleText;
 
     private void Awake()
     {
-        scoreText.text = "0";
-        collectibleText.text = "0";
+        p1_Score.text = "0";
+        p1_Orbs.text = "0";
+        p2_Score.text = "0";
+        p2_Orbs.text = "0";
     }
 
-    public void SetScore(float score)
+    public void P1SetScore(float score)
     {
-        scoreText.text = Mathf.RoundToInt(Mathf.Abs(score)).ToString();
+        p1_Score.text = Mathf.RoundToInt(Mathf.Abs(score)).ToString();
     }
 
-    public void SetCollectibles(int orbs)
+    public void P1SetOrbs(int orbs)
     {
-        collectibleText.text = orbs.ToString();
+        p1_Orbs.text = orbs.ToString();
+    }
+
+    public void P2SetScore(float score)
+    {
+        p2_Score.text = Mathf.RoundToInt(Mathf.Abs(score)).ToString();
+    }
+
+    public void P2SetOrbs(int orbs)
+    {
+        p2_Orbs.text = orbs.ToString();
+    }
+
+    public void P1GameOver()
+    {
+        Debug.Log("P1 Game Over!");
+        canvasAnimator.Play("GameOver");
+    }
+
+    public void P2GameOver()
+    {
+        Debug.Log("P2 Game Over!");
     }
 
 }

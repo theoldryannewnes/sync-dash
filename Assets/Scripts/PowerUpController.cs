@@ -8,11 +8,9 @@ public class PowerUpController : MonoBehaviour
     private Rigidbody rb;
     private Collider sphereCollider;
     private MeshRenderer meshRenderer;
-    private GameManager gameManager;
     private ObjectPool<GameObject> powerUpPool;
 
     public ObjectPool<GameObject> PowerUpPool { set => powerUpPool = value; }
-    public GameManager GameManager { set => gameManager = value; }
 
     void Awake()
     {
@@ -23,7 +21,7 @@ public class PowerUpController : MonoBehaviour
 
     void Update()
     {
-        // Release bump if it goes past the destroy point
+        // Release if it goes past the destroy point
         if (gameObject.transform.position.z < -10)
         {
             //Stop movement
@@ -58,9 +56,6 @@ public class PowerUpController : MonoBehaviour
 
     public void BreakOrb()
     {
-        //Add Points
-        gameManager.AddOrbPoint();
-
         //Disable collider
         sphereCollider.enabled = false;
 

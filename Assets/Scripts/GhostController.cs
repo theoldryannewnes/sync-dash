@@ -1,17 +1,14 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using static PlayerActions;
+using static UnityEngine.InputSystem.DefaultInputActions;
 
-public class PlayerController : MonoBehaviour
+public class GhostController : MonoBehaviour
 {
 
     [SerializeField] private float jumpForce = 10f;
-    [SerializeField] private InputActionReference playerActions;
     private bool _isPlaying;
     private bool _isPlayerGrounded;
     private Rigidbody rb;
-    private InputAction jumpAction;
     private CanvasController canvasController;
     private GameManager gameManager;
 
@@ -23,17 +20,9 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
-        _isPlaying = true;
         _isPlayerGrounded = false;
+        _isPlaying = true;
         rb = GetComponent<Rigidbody>();
-        if (playerActions != null)
-        {
-            jumpAction = playerActions.action;
-        }
-        else
-        {
-            Debug.LogError("Please assign Jump Action Reference!");
-        }
     }
 
     void Start()
@@ -41,21 +30,16 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(StartDistanceCounterRoutine());
     }
 
-    void OnEnable()
+    void Update()
     {
-        if (jumpAction != null)
+        if (NetworkManager.playerActionQueue.Count > 0)
         {
-            jumpAction.Enable();
-            jumpAction.performed += OnJumpPerformed;
-        }
-    }
+            PlayerActions action = NetworkManager.playerActionQueue.Dequeue();
 
-    void OnDisable()
-    {
-        if (jumpAction != null)
-        {
-            jumpAction.performed -= OnJumpPerformed;
-            jumpAction.Disable();
+            if (action.Type == PlayerActions.PlayerAction.Jump)
+            {
+                DoJump();
+            }
         }
     }
 
@@ -72,7 +56,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Bump"))
         {
             _isPlaying = false;
-            canvasController.P1GameOver();
+            canvasController.P2GameOver();
             gameManager.GameFinished();
         }
 
@@ -80,7 +64,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("PowerUp"))
         {
             orbsCollected++;
-            canvasController.P1SetOrbs(orbsCollected);
+            canvasController.P2SetOrbs(orbsCollected);
             collision.gameObject.GetComponent<PowerUpController>()?.BreakOrb();
         }
     }
@@ -99,21 +83,15 @@ public class PlayerController : MonoBehaviour
             distanceTravelled += gameManager.currentMoveSpeed;
 
             // Set UI value
-            canvasController.P1SetScore(distanceTravelled);
+            canvasController.P2SetScore(distanceTravelled);
         }
     }
 
-    private void OnJumpPerformed(InputAction.CallbackContext context)
+    private void DoJump()
     {
         if (_isPlaying && _isPlayerGrounded)
         {
-            // Enque PlayerAction
-            PlayerActions jumpAction = new PlayerActions { Type = PlayerAction.Jump, Timestamp = Time.time };
-            NetworkManager.playerActionQueue.Enqueue(jumpAction);
-
-            // Do physics
             rb.AddForce(new Vector3(0f, jumpForce, 0f), ForceMode.Impulse);
-            _isPlayerGrounded = false;
         }
     }
 
