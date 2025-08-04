@@ -171,6 +171,14 @@ public class GameManager : MonoBehaviour
         powerUpObjects.Add(power);
     }
 
+    public void BreakLastOrb()
+    {
+        PowerUpController powerUp = powerUpObjects[0].GetComponent<PowerUpController>();
+
+        powerUp.SetVelocity(0, true);
+        powerUp.BreakOrb();
+    }
+
     public void GameFinished()
     {
         DestroyAll();

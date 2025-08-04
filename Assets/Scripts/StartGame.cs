@@ -18,4 +18,9 @@ public class StartGame : MonoBehaviour
         SceneManager.LoadScene("Game");
     }
 
+    public void UpdateDelay(float value)
+    {
+        GhostController.simulatedLag = value;
+    }
+
 }

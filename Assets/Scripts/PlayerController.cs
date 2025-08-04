@@ -6,6 +6,8 @@ using static PlayerActions;
 public class PlayerController : MonoBehaviour
 {
 
+    private const float syncPositionInterval = 0.1f;
+
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private InputActionReference playerActions;
     private bool _isPlaying;
@@ -39,6 +41,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         StartCoroutine(StartDistanceCounterRoutine());
+        StartCoroutine(SendPositionRoutine());
     }
 
     void OnEnable()
@@ -61,27 +64,39 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        // Ground check
-        if (collision.gameObject.CompareTag("Ground"))
+        if (_isPlaying)
         {
-            //Allow next jump
-            _isPlayerGrounded = true;
-        }
+            // Ground check
+            if (collision.gameObject.CompareTag("Ground"))
+            {
+                //Allow next jump
+                _isPlayerGrounded = true;
+            }
 
-        // Game Over
-        if (collision.gameObject.CompareTag("Bump"))
-        {
-            _isPlaying = false;
-            canvasController.P1GameOver();
-            gameManager.GameFinished();
-        }
+            // Game Over
+            if (collision.gameObject.CompareTag("Bump"))
+            {
+                _isPlaying = false;
 
-        // PowerUp Collected
-        if (collision.gameObject.CompareTag("PowerUp"))
-        {
-            orbsCollected++;
-            canvasController.P1SetOrbs(orbsCollected);
-            collision.gameObject.GetComponent<PowerUpController>()?.BreakOrb();
+                // Enque PlayerAction
+                PlayerActions endGameAction = new PlayerActions { Type = PlayerAction.Bump, Timestamp = Time.time };
+                NetworkManager.playerActionQueue.Enqueue(endGameAction);
+
+                canvasController.P1GameOver();
+                gameManager.GameFinished();
+            }
+
+            // PowerUp Collected
+            if (collision.gameObject.CompareTag("PowerUp"))
+            {
+                orbsCollected++;
+                // Enque PlayerAction
+                PlayerActions endGameAction = new PlayerActions { Type = PlayerAction.Orb, Timestamp = Time.time };
+                NetworkManager.playerActionQueue.Enqueue(endGameAction);
+
+                canvasController.P1SetOrbs(orbsCollected);
+                gameManager.BreakLastOrb();
+            }
         }
     }
 
@@ -103,6 +118,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private IEnumerator SendPositionRoutine()
+    {
+        while (_isPlaying)
+        {
+            // Enque PlayerPosition
+            var posUpdate = new PlayerActions
+            {
+                Type = PlayerActions.PlayerAction.PlayerPosition,
+                Timestamp = Time.time,
+                Position = transform.position.y
+            };
+            NetworkManager.playerActionQueue.Enqueue(posUpdate);
+
+            // Repeat after
+            yield return new WaitForSeconds(syncPositionInterval);
+        }
+    }
+
     private void OnJumpPerformed(InputAction.CallbackContext context)
     {
         if (_isPlaying && _isPlayerGrounded)
@@ -114,6 +147,8 @@ public class PlayerController : MonoBehaviour
             // Do physics
             rb.AddForce(new Vector3(0f, jumpForce, 0f), ForceMode.Impulse);
             _isPlayerGrounded = false;
+
+            print("Jump animation");
         }
     }
 

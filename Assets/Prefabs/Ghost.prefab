@@ -149,4 +149,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee78091c024bb5548aa1a66cefb430fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 10
+  simulatedLag: 1
+  smoothingSpeed: 30
