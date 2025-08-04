@@ -125,16 +125,20 @@ public class GameManager : MonoBehaviour
 
     private void DestroyAll()
     {
-        // Destroy Bumps
-        foreach (var bump in bumpObjects)
-        {
-            Destroy(bump);
-        }
-
         //Destroy PowerUps
         foreach (var power in powerUpObjects)
         {
             Destroy(power);
+        }
+
+        // Destroy Bumps
+        foreach (var bump in bumpObjects)
+        {
+            if (bump.activeSelf)
+            {
+                BumpController bc = bump.GetComponent<BumpController>();
+                bc.DissolveBump();
+            }
         }
     }
 

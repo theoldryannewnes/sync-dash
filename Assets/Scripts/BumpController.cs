@@ -1,10 +1,14 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 
 public class BumpController : MonoBehaviour
 {
 
+    [SerializeField] private float dissolveDuration = 3f;
+
     private Rigidbody rb;
+    private float dissolveStrength;
     private ObjectPool<GameObject> bumpPool;
 
     public ObjectPool<GameObject> BumpPool { set => bumpPool = value; }
@@ -27,6 +31,24 @@ public class BumpController : MonoBehaviour
         }
     }
 
+    private IEnumerator DissolveBumpRoutine()
+    {
+        float elapsedTime = 0f;
+        Material dissolveMat = GetComponent<Renderer>().material;
+
+        while (elapsedTime < dissolveDuration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            dissolveStrength = Mathf.Lerp(0, 1, elapsedTime / dissolveDuration);
+            dissolveMat.SetFloat("_DissolveStrength", dissolveStrength);
+
+            yield return null;
+        }
+
+        Destroy(gameObject);
+    }
+
     public void SetVelocity(float speed, bool stop = false)
     {
         if (stop)
@@ -41,6 +63,11 @@ public class BumpController : MonoBehaviour
             rb.linearVelocity = new Vector3(0f, 0f, speed);
             rb.angularVelocity = Vector3.zero;
         }
+    }
+
+    public void DissolveBump()
+    {
+        StartCoroutine(DissolveBumpRoutine());
     }
 
 }
