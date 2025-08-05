@@ -41,13 +41,13 @@ public class CanvasController : MonoBehaviour
 
     public void P1GameOver()
     {
-        Debug.Log("P1 Game Over!");
+        Debug.Log("Player Game Over!");
         canvasAnimator.Play("GameOver");
     }
 
     public void P2GameOver()
     {
-        Debug.Log("P2 Game Over!");
+        Debug.Log("Ghost Game Over!");
     }
 
 }

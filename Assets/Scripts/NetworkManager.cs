@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class NetworkManager : MonoBehaviour
 {
-    private const float minSpawnTime = 1f;
-    private const float maxSpawnTime = 4f;
+
+    private const float minSpawnTime = 2f;
+    private const float maxSpawnTime = 6f;
 
     [SerializeField] private GameManager p1_Manager;
     [SerializeField] private GameManager p2_Manager;

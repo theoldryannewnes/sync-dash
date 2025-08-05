@@ -8,6 +8,7 @@ public class PowerUpController : MonoBehaviour
     private Rigidbody rb;
     private Collider sphereCollider;
     private MeshRenderer meshRenderer;
+    private bool isActiveInPool;
     private ObjectPool<GameObject> powerUpPool;
 
     public ObjectPool<GameObject> PowerUpPool { set => powerUpPool = value; }
@@ -21,8 +22,8 @@ public class PowerUpController : MonoBehaviour
 
     void Update()
     {
-        // Release if it goes past the destroy point
-        if (gameObject.transform.position.z < -10)
+        // Release if it goes past the destroy point & has not broken
+        if (gameObject.transform.position.z < -10 && isActiveInPool)
         {
             ReleaseToPool();
         }
@@ -30,6 +31,7 @@ public class PowerUpController : MonoBehaviour
 
     private void OnEnable()
     {
+        isActiveInPool = true;
         sphereCollider.enabled = true;
         meshRenderer.enabled = true;
     }
@@ -66,6 +68,9 @@ public class PowerUpController : MonoBehaviour
 
     public void BreakOrb()
     {
+        //Set velocity to 0
+        SetVelocity(0, true);
+
         //Disable collider
         sphereCollider.enabled = false;
 

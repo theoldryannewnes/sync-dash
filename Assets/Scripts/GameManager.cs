@@ -173,8 +173,6 @@ public class GameManager : MonoBehaviour
     public void BreakLastOrb()
     {
         PowerUpController powerUp = powerUpObjects[0].GetComponent<PowerUpController>();
-
-        powerUp.SetVelocity(0, true);
         powerUp.BreakOrb();
     }
 
