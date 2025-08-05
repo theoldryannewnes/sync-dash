@@ -137,6 +137,7 @@ public class GameManager : MonoBehaviour
             if (bump.activeSelf)
             {
                 BumpController bc = bump.GetComponent<BumpController>();
+                bc.SetVelocity(0);
                 bc.DissolveBump();
             }
         }

@@ -48,26 +48,17 @@ public class BumpController : MonoBehaviour
     private void ReleaseToPool()
     {
         //Stop movement
-        SetVelocity(0f, true);
+        SetVelocity(0f);
 
         //Release back to Pool
         bumpPool.Release(gameObject);
     }
 
-    public void SetVelocity(float speed, bool stop = false)
+    public void SetVelocity(float speed)
     {
-        if (stop)
-        {
-            //Stop Moving
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
-        else
-        {
-            //Set velocity
-            rb.linearVelocity = new Vector3(0f, 0f, speed);
-            rb.angularVelocity = Vector3.zero;
-        }
+        //Set velocity
+        rb.linearVelocity = new Vector3(0f, 0f, speed);
+        rb.angularVelocity = Vector3.zero;
     }
 
     public void DissolveBump()

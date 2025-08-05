@@ -39,7 +39,7 @@ public class PowerUpController : MonoBehaviour
     private void ReleaseToPool()
     {
         //Stop movement
-        SetVelocity(0f, true);
+        SetVelocity(0f);
 
         //Release back to Pool
         powerUpPool.Release(gameObject);
@@ -50,26 +50,17 @@ public class PowerUpController : MonoBehaviour
         gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + y, gameObject.transform.position.z);
     }
 
-    public void SetVelocity(float speed, bool stop = false)
+    public void SetVelocity(float speed)
     {
-        if (stop)
-        {
-            //Stop Moving
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
-        else
-        {
-            //Set velocity
-            rb.linearVelocity = new Vector3(0f, 0f, speed);
-            rb.angularVelocity = Vector3.zero;
-        }
+        //Set velocity
+        rb.linearVelocity = new Vector3(0f, 0f, speed);
+        rb.angularVelocity = Vector3.zero;
     }
 
     public void BreakOrb()
     {
         //Set velocity to 0
-        SetVelocity(0, true);
+        SetVelocity(0);
 
         //Disable collider
         sphereCollider.enabled = false;
