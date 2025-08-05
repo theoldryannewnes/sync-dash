@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3346925046529411809}
   - component: {fileID: 2828796606070962660}
   - component: {fileID: 3867999170949208534}
+  - component: {fileID: 5495016974746711501}
   - component: {fileID: 4015909573000925424}
   m_Layer: 0
   m_Name: Player
@@ -137,6 +138,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 122
   m_CollisionDetection: 0
+--- !u!95 &5495016974746711501
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 532076245042032447}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: aa5530275a8f31341b24e5c56d014624, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &4015909573000925424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,15 +172,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68e795007a7f3f14a910ae18b999ee6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isPlaying: 0
   jumpForce: 10
   playerActions: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  jumpAction:
-    m_Name: Jump
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 7ed736e0-5c0e-4d7b-8e10-21530abc6dc0
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0

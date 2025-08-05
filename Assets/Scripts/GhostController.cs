@@ -5,15 +5,17 @@ using UnityEngine.UI;
 
 public class GhostController : MonoBehaviour
 {
-    [Range(0f, 2f)]
-    public static float simulatedLag = 1f;
+    [Range(0f, 1f)]
+    public static float simulatedLag = 0.2f;
     public Slider delaySlider;
+    public TMP_Text delayText;
 
-    public float smoothingSpeed = 30f;
+    public float smoothingSpeed = 15f;
     private Vector3 targetPosition;
 
     private bool _isPlaying;
 
+    private Animator jumpAnimator;
     private CanvasController canvasController;
     private GameManager gameManager;
 
@@ -27,13 +29,21 @@ public class GhostController : MonoBehaviour
     {
         _isPlaying = true;
         targetPosition = transform.position;
+        jumpAnimator = GetComponent<Animator>();
     }
 
     void Start()
     {
         delaySlider = canvasController.GetComponentInChildren<Slider>();
+        delayText = delaySlider.transform.GetChild(3).GetComponent<TMP_Text>();
         delaySlider.SetValueWithoutNotify(simulatedLag);
         delaySlider.interactable = true;
+
+        // Add listener to handle text
+        delaySlider.onValueChanged.AddListener(UpdateLagValue);
+
+        //Update value at start
+        UpdateLagValue(delaySlider.value);
 
         StartCoroutine(StartDistanceCounterRoutine());
     }
@@ -95,9 +105,18 @@ public class GhostController : MonoBehaviour
         }
     }
 
+    public void UpdateLagValue(float value)
+    {
+        // Update value
+        simulatedLag = value;
+
+        //convert to ms and display
+        delayText.text = $"{value * 1000:F2} ms";
+    }
+
     private void DoJump()
     {
-        print("Jump animation");
+        jumpAnimator.Play("Jump");
     }
 
 }

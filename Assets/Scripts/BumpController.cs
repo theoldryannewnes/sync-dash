@@ -23,11 +23,7 @@ public class BumpController : MonoBehaviour
         // Release if it goes past the destroy point
         if (gameObject.transform.position.z < -10)
         {
-            //Stop movement
-            SetVelocity(0f, true);
-
-            //Release back to Pool
-            bumpPool.Release(gameObject);
+            ReleaseToPool();
         }
     }
 
@@ -46,7 +42,16 @@ public class BumpController : MonoBehaviour
             yield return null;
         }
 
-        Destroy(gameObject);
+        ReleaseToPool();
+    }
+
+    private void ReleaseToPool()
+    {
+        //Stop movement
+        SetVelocity(0f, true);
+
+        //Release back to Pool
+        bumpPool.Release(gameObject);
     }
 
     public void SetVelocity(float speed, bool stop = false)

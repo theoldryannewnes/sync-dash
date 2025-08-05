@@ -21,13 +21,13 @@ public class GameManager : MonoBehaviour
 
     private IObjectPool<GameObject> bumpPool;
     private bool bumpCollectionCheck = true;
-    private int bumpPoolCapacity = 10;
-    private int bumpPoolMaxSize = 20;
+    private int bumpPoolCapacity = 6;
+    private int bumpPoolMaxSize = 12;
 
     private IObjectPool<GameObject> powerUpPool;
     private bool powerUpCollectionCheck = true;
-    private int powerUpPoolCapacity = 1;
-    private int powerUpPoolMaxSize = 1;
+    private int powerUpPoolCapacity = 2;
+    private int powerUpPoolMaxSize = 4;
 
     public bool IsPlaying { get { return !isShowingEndPanel; } }
 
@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
 
     private void OnGetFromPowerUpPool(GameObject power)
     {
-        // Move the bump to spawn point
+        // Move the powerup to spawn point
         if (power != null && objectSpawner != null)
         {
             power.transform.position = objectSpawner.position;
@@ -125,13 +125,13 @@ public class GameManager : MonoBehaviour
 
     private void DestroyAll()
     {
-        //Destroy PowerUps
+        //Destroy Active PowerUps
         foreach (var power in powerUpObjects)
         {
             Destroy(power);
         }
 
-        // Destroy Bumps
+        // Dissolve Active Bumps
         foreach (var bump in bumpObjects)
         {
             if (bump.activeSelf)
@@ -158,7 +158,6 @@ public class GameManager : MonoBehaviour
     {
         // Spawn bump
         GameObject power = powerUpPool.Get();
-
         PowerUpController powerController = power.GetComponent<PowerUpController>();
 
         //Set Velocity

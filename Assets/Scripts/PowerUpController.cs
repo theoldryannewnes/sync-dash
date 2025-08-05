@@ -24,11 +24,7 @@ public class PowerUpController : MonoBehaviour
         // Release if it goes past the destroy point
         if (gameObject.transform.position.z < -10)
         {
-            //Stop movement
-            SetVelocity(0f, true);
-
-            //Release back to Pool
-            powerUpPool.Release(gameObject);
+            ReleaseToPool();
         }
     }
 
@@ -36,6 +32,15 @@ public class PowerUpController : MonoBehaviour
     {
         sphereCollider.enabled = true;
         meshRenderer.enabled = true;
+    }
+
+    private void ReleaseToPool()
+    {
+        //Stop movement
+        SetVelocity(0f, true);
+
+        //Release back to Pool
+        powerUpPool.Release(gameObject);
     }
 
     public void SetYOffset(float y)
@@ -69,6 +74,8 @@ public class PowerUpController : MonoBehaviour
 
         //Play PS
         ps.Play();
+
+        Invoke("ReleaseToPool", 2f);
     }
 
 }

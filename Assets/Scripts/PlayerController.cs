@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private bool _isPlayerGrounded;
     private Rigidbody rb;
     private InputAction jumpAction;
+    private Animator jumpAnimator;
     private CanvasController canvasController;
     private GameManager gameManager;
 
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour
         _isPlaying = true;
         _isPlayerGrounded = false;
         rb = GetComponent<Rigidbody>();
+        jumpAnimator = GetComponent<Animator>();
         if (playerActions != null)
         {
             jumpAction = playerActions.action;
@@ -90,9 +92,10 @@ public class PlayerController : MonoBehaviour
             if (collision.gameObject.CompareTag("PowerUp"))
             {
                 orbsCollected++;
+
                 // Enque PlayerAction
-                PlayerActions endGameAction = new PlayerActions { Type = PlayerAction.Orb, Timestamp = Time.time };
-                NetworkManager.playerActionQueue.Enqueue(endGameAction);
+                PlayerActions collectOrbAction = new PlayerActions { Type = PlayerAction.Orb, Timestamp = Time.time };
+                NetworkManager.playerActionQueue.Enqueue(collectOrbAction);
 
                 canvasController.P1SetOrbs(orbsCollected);
                 gameManager.BreakLastOrb();
@@ -148,7 +151,7 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(new Vector3(0f, jumpForce, 0f), ForceMode.Impulse);
             _isPlayerGrounded = false;
 
-            print("Jump animation");
+            jumpAnimator.Play("Jump");
         }
     }
 

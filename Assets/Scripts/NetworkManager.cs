@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class NetworkManager : MonoBehaviour
 {
-    private const float minSpawnTime = 2f;
-    private const float maxSpawnTime = 6f;
+    private const float minSpawnTime = 1f;
+    private const float maxSpawnTime = 4f;
 
     [SerializeField] private GameManager p1_Manager;
     [SerializeField] private GameManager p2_Manager;
 
     private static float currentMoveSpeed;
 
-    private void SpeedUpGame() => currentMoveSpeed -= 5f;
+    private void SpeedUpGame() => currentMoveSpeed -= 2f;
 
     public static float MoveSpeed {  get { return currentMoveSpeed; } }
 
